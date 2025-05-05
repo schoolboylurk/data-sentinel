@@ -22,8 +22,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy compiled binary
 COPY --from=builder /usr/local/bin/ai-app /usr/local/bin/ai-app
 
-# Copy templates and static assets
+# Copy templates, static assets and db schema
 COPY --from=builder /app/web/templates /app/web/templates
+COPY --from=builder /app/pkg/database/schema.sql  /app/pkg/database/schema.sql
 
 # env defaults (override at runtime)
 ENV DB_PATH="./data.db" \
