@@ -1,4 +1,4 @@
-FROM cgr.dev/chainguard/go AS builder
+FROM chainguard/go:latest AS builder
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ RUN CGO_ENABLED=0 GOOS=linux \
     go build -ldflags="-s -w" -o /usr/local/bin/ai-app ./cmd
 
 # ─────────── Final Stage ────────────
-FROM cgr.dev/chainguard/wolfi-base
+FROM chainguard/wolfi-base:latest
 
 RUN apk update && add --no-cache --update-cache curl jq
 
