@@ -12,10 +12,12 @@ RUN CGO_ENABLED=0 GOOS=linux \
     go build -ldflags="-s -w" -o /usr/local/bin/ai-app ./cmd
 
 # ─────────── Final Stage ────────────
-FROM chainguard/wolfi-base:latest
+FROM debian:bullseye-slim
 
-RUN tdnf install -y ca-certificates curl \
-    && tdnf clean all
+# install certs + curl + jq
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ca-certificates curl jq \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy compiled binary
 COPY --from=builder /usr/local/bin/ai-app /usr/local/bin/ai-app
