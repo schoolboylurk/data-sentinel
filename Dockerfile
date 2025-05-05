@@ -1,4 +1,4 @@
-FROM golang:1.24-bullseye-slim AS builder
+FROM golang:1.24-bullseye AS builder
 
 # Install CGO dependencies for sqlite3
 RUN apt-get update && \
