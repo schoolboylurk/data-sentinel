@@ -13,7 +13,7 @@ RUN go mod download
 
 # Build binary
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux \
+RUN CGO_ENABLED=1 GOOS=linux \
     go build -ldflags="-s -w" -o /usr/local/bin/ai-app ./cmd
 
 # ─────────── Final Stage ────────────
