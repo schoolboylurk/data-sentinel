@@ -14,8 +14,6 @@ RUN CGO_ENABLED=0 GOOS=linux \
 # ─────────── Final Stage ────────────
 FROM chainguard/wolfi-base:latest
 
-RUN apk update && add --no-cache --update-cache curl jq
-
 RUN tdnf install -y ca-certificates curl \
     && tdnf clean all
 
@@ -26,9 +24,13 @@ COPY --from=builder /usr/local/bin/ai-app /usr/local/bin/ai-app
 COPY --from=builder /app/web/templates /app/web/templates
 
 # env defaults (override at runtime)
-ENV OPENAI_API_KEY="" \
+ENV DB_PATH="./data.db" \
+    DB_SCHEMA="./pkg/database/schema.sql" \
+    OPENAI_API_KEY="" \
     PERMIT_API_KEY="" \
     PERMIT_PDP_URL="" \
+    SESSION_SECRET="" \
+    COOKIE_DOMAIN="localhost" \
     PORT=${PORT:-8080}
 
 EXPOSE 8080
