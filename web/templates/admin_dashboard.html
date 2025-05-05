@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Admin Dashboard</title>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+  <!-- Navigation -->
+  <nav class="bg-white shadow rounded mb-6 p-4 flex justify-center space-x-4">
+    <a href="/admin/dashboard" class="text-blue-600 font-semibold">Dashboard</a>
+    <a href="/admin/kids" class="text-gray-700 hover:text-blue-600">Kids</a>
+    <a href="/admin/policies" class="text-gray-700 hover:text-blue-600">Policies</a>
+    <a href="/admin/requests" class="text-gray-700 hover:text-blue-600">Requests</a>
+    <a href="/admin/groups" class="text-gray-700 hover:text-blue-600">Groups</a>
+    <a href="/login" class="text-gray-700 hover:text-blue-600">Logout</a>
+  </nav>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Submissions Chart Card -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <h2 class="text-xl font-semibold mb-4">24h Prompt Submissions</h2>
+      <canvas id="submitChart" class="w-full h-64"></canvas>
+    </div>
+
+    <!-- Violations Chart Card -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <h2 class="text-xl font-semibold mb-4">24h Violations</h2>
+      <canvas id="violationChart" class="w-full h-64"></canvas>
+    </div>
+  </div>
+
+  <script>
+    async function fetchData(url) {
+      const res = await fetch(url);
+      return res.json();
+    }
+
+    async function renderCharts() {
+      const [subsData, violData] = await Promise.all([
+        fetchData('/admin/metrics'),
+        fetchData('/admin/violations')
+      ]);
+
+      const ctx1 = document.getElementById('submitChart').getContext('2d');
+      new Chart(ctx1, {
+        type: 'bar',
+        data: {
+          labels: subsData.labels,
+          datasets: [{
+            label: 'Submissions',
+            data: subsData.values,
+            backgroundColor: 'rgba(59, 130, 246, 0.5)',
+            borderColor: 'rgba(59, 130, 246, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+
+      const ctx2 = document.getElementById('violationChart').getContext('2d');
+      new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: violData.labels,
+          datasets: [{
+            label: 'Violations',
+            data: violData.values,
+            backgroundColor: 'rgba(239, 68, 68, 0.5)',
+            borderColor: 'rgba(239, 68, 68, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+    }
+
+    renderCharts();
+    setInterval(renderCharts, 60000);
+  </script>
+</body>
+</html>

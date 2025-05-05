@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Prompt Requests</title>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+  <!-- Navigation -->
+  <nav class="bg-white shadow rounded mb-6 p-4 flex justify-center space-x-4">
+    <a href="/admin/dashboard" class="text-gray-700 hover:text-blue-600">Dashboard</a>
+    <a href="/admin/kids" class="text-gray-700 hover:text-blue-600">Kids</a>
+    <a href="/admin/policies" class="text-gray-700 hover:text-blue-600">Policies</a>
+    <a href="/admin/requests" class="text-blue-600 font-semibold">Requests</a>
+    <a href="/admin/groups" class="text-gray-700 hover:text-blue-600">Groups</a>
+    <a href="/login" class="text-gray-700 hover:text-blue-600">Logout</a>
+  </nav>
+
+  <!-- Requests Table -->
+  <div class="bg-white shadow rounded-lg overflow-x-auto mb-8">
+    <h1 class="text-2xl font-semibold px-6 py-4 border-b">Prompt Requests</h1>
+    <table class="min-w-full">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kid</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prompt</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Approved</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">When</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        {{ range .Requests }}
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">{{ .ID }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ .Username }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ .Prompt }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ if .Approved }}Yes{{ else }}No{{ end }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ .CreatedAt }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            {{ if not .Approved }}
+            <form method="post" action="/admin/approve/{{ .ID }}" class="inline">
+              <input type="hidden" name="_csrf" value="{{ .csrfToken }}" />
+              <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition">Approve</button>
+            </form>
+            {{ else }}
+              &mdash;
+            {{ end }}
+          </td>
+        </tr>
+        {{ end }}
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
