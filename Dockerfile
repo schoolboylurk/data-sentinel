@@ -31,6 +31,9 @@ COPY --from=builder /usr/local/bin/ai-app /usr/local/bin/ai-app
 COPY --from=builder /app/web/templates /app/web/templates
 COPY --from=builder /app/pkg/database/schema.sql  /schema.sql
 
+# Set working directory for runtime
+WORKDIR /app
+
 # env defaults (override at runtime)
 ENV DB_PATH="./data.db" \
     DB_SCHEMA="./schema.sql" \
