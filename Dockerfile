@@ -1,4 +1,9 @@
-FROM chainguard/go:latest AS builder
+FROM golang:1.24-bullseye-slim AS builder
+
+# Install CGO dependencies for sqlite3
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc libsqlite3-dev && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -16,7 +21,7 @@ FROM debian:bullseye-slim
 
 # install certs + curl + jq
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      ca-certificates curl jq \
+      ca-certificates sqlite3 libsqlite3-0 curl jq \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy compiled binary
