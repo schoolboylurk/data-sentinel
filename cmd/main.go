@@ -98,9 +98,13 @@ func main() {
 		},
 	})
 
-	// 3d. Templates & Static files
+	// 3d. Template files
 	r.LoadHTMLGlob("web/templates/*.html")
-	r.Static("/static", "./web/static")
+
+	// 3e. Serve homepage at "/"
+	r.GET("/", func(c *gin.Context) {
+	c.HTML(http.StatusOK, "index.html", nil)
+	})
 
 	// health endpoint for Docker HEALTHCHECK
 	r.GET("/health", func(c *gin.Context) {
