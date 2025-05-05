@@ -29,14 +29,14 @@ COPY --from=builder /usr/local/bin/ai-app /usr/local/bin/ai-app
 
 # Copy templates, static assets and db schema
 COPY --from=builder /app/web/templates /app/web/templates
-COPY --from=builder /app/pkg/database/schema.sql  /app/pkg/database/schema.sql
+COPY --from=builder /app/pkg/database/schema.sql  /app/schema.sql
 
 # Set working directory for runtime
 WORKDIR /app
 
 # env defaults (override at runtime)
 ENV DB_PATH="./data.db" \
-    DB_SCHEMA=".pkg/database/schema.sql" \
+    DB_SCHEMA="./schema.sql" \
     OPENAI_API_KEY="" \
     PERMIT_API_KEY="" \
     PERMIT_PDP_URL="" \
