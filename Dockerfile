@@ -1,4 +1,4 @@
-FROM cgr.dev/chainguard/go@sha256:7c470e24ead842cb1a6e668912709d1b8e29c7687581924ba9164031adbcf41f AS builder
+FROM cgr.dev/chainguard/go AS builder
 
 WORKDIR /app
 
@@ -12,7 +12,9 @@ RUN CGO_ENABLED=0 GOOS=linux \
     go build -ldflags="-s -w" -o /usr/local/bin/ai-app ./cmd
 
 # ─────────── Final Stage ────────────
-FROM cgr.dev/chainguard/wolfi-base:latest
+FROM cgr.dev/chainguard/wolfi-base
+
+RUN apk update && add --no-cache --update-cache curl jq
 
 RUN tdnf install -y ca-certificates curl \
     && tdnf clean all
