@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Groups</title>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+  <!-- Navigation -->
+  <nav class="bg-white shadow rounded mb-6 p-4 flex justify-center space-x-4">
+    <a href="/admin/dashboard" class="text-gray-700 hover:text-blue-600">Dashboard</a>
+    <a href="/admin/kids" class="text-gray-700 hover:text-blue-600">Kids</a>
+    <a href="/admin/policies" class="text-gray-700 hover:text-blue-600">Policies</a>
+    <a href="/admin/requests" class="text-gray-700 hover:text-blue-600">Requests</a>
+    <a href="/admin/groups" class="text-blue-600 font-semibold">Groups</a>
+    <a href="/login" class="text-gray-700 hover:text-blue-600">Logout</a>
+  </nav>
+
+  <!-- Groups List -->
+  <div class="bg-white shadow rounded-lg mb-8 p-6 max-w-3xl mx-auto">
+    <h1 class="text-2xl font-semibold mb-4">Groups</h1>
+    <ul class="space-y-4">
+      {{ range .Groups }}
+      <li class="flex items-center justify-between">
+        <span class="text-gray-800 font-medium">{{ .Name }}</span>
+        <form method="post" action="/admin/groups/{{ .ID }}/members" class="flex space-x-2">
+          <input
+            name="username"
+            placeholder="Username"
+            required
+            class="px-3 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <button
+            type="submit"
+            class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition"
+          >
+            Add Member
+          </button>
+        </form>
+      </li>
+      {{ end }}
+    </ul>
+  </div>
+
+  <!-- Create New Group -->
+  <div class="bg-white shadow rounded-lg p-6 max-w-sm mx-auto">
+    <h2 class="text-xl font-semibold mb-4">Create New Group</h2>
+    <form method="post" action="/admin/groups" class="space-y-4">
+      <input type="hidden" name="_csrf" value="{{ .csrfToken }}" />
+      <label class="block">
+        <span class="text-gray-700">Group Name</span>
+        <input
+          name="name"
+          placeholder="Group name"
+          required
+          class="mt-1 block w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </label>
+      <button
+        type="submit"
+        class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded transition"
+      >
+        Create Group
+      </button>
+    </form>
+  </div>
+</body>
+</html>

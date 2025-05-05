@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Kids</title>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+  <!-- Navigation -->
+  <nav class="bg-white shadow rounded mb-6 p-4 flex justify-center space-x-4">
+    <a href="/admin/dashboard" class="text-gray-700 hover:text-blue-600">Dashboard</a>
+    <a href="/admin/kids" class="text-blue-600 font-semibold">Kids</a>
+    <a href="/admin/policies" class="text-gray-700 hover:text-blue-600">Policies</a>
+    <a href="/admin/requests" class="text-gray-700 hover:text-blue-600">Requests</a>
+    <a href="/admin/groups" class="text-gray-700 hover:text-blue-600">Groups</a>
+    <a href="/login" class="text-gray-700 hover:text-blue-600">Logout</a>
+  </nav>
+
+  <!-- Kids List -->
+  <div class="bg-white shadow rounded-lg mb-8 p-6 max-w-3xl mx-auto">
+    <h1 class="text-2xl font-semibold mb-4">Kids</h1>
+    <ul class="list-disc list-inside space-y-2">
+      {{ range .Kids }}
+      <li class="text-gray-800">
+        <span class="font-medium">{{ .Username }}</span> <span class="text-sm text-gray-500">(age {{ .Age }})</span>
+      </li>
+      {{ end }}
+    </ul>
+  </div>
+
+  <!-- Add / Update Kid Form -->
+  <div class="bg-white shadow rounded-lg p-6 max-w-sm mx-auto">
+    <h2 class="text-xl font-semibold mb-4">Add / Update Kid</h2>
+    <form method="post" action="/admin/kids" class="space-y-4">
+      <input type="hidden" name="_csrf" value="{{ .csrfToken }}" />
+      <label class="block">
+        <span class="text-gray-700">Username</span>
+        <input
+          name="username"
+          placeholder="Username"
+          required
+          class="mt-1 block w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </label>
+      <label class="block">
+        <span class="text-gray-700">Age</span>
+        <input
+          type="number"
+          name="age"
+          placeholder="Age"
+          required
+          class="mt-1 block w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </label>
+      <button
+        type="submit"
+        class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded transition"
+      >
+        Save
+      </button>
+    </form>
+    <div class="mt-4 text-center">
+      <a href="/admin/policies" class="text-blue-500 hover:text-blue-700 mx-2">Policies</a> |
+      <a href="/admin/requests" class="text-blue-500 hover:text-blue-700 mx-2">Requests</a>
+    </div>
+  </div>
+</body>
+</html>

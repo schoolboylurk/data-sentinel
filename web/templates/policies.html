@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Content Policies</title>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+  <!-- Navigation -->
+  <nav class="bg-white shadow rounded mb-6 p-4 flex justify-center space-x-4">
+    <a href="/admin/dashboard" class="text-gray-700 hover:text-blue-600">Dashboard</a>
+    <a href="/admin/kids" class="text-gray-700 hover:text-blue-600">Kids</a>
+    <a href="/admin/policies" class="text-blue-600 font-semibold">Policies</a>
+    <a href="/admin/requests" class="text-gray-700 hover:text-blue-600">Requests</a>
+    <a href="/admin/groups" class="text-gray-700 hover:text-blue-600">Groups</a>
+    <a href="/login" class="text-gray-700 hover:text-blue-600">Logout</a>
+  </nav>
+
+  <!-- Policies Table -->
+  <div class="bg-white shadow rounded-lg overflow-x-auto mb-8">
+    <h1 class="text-2xl font-semibold px-6 py-4 border-b">Content Policies</h1>
+    <table class="min-w-full">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kid</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Allowed Topics</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Restricted Topics</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        {{ range .Policies }}
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">{{ .Username }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ .Allowed }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ .Restricted }}</td>
+        </tr>
+        {{ end }}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Update / Add Policy Form -->
+  <div class="bg-white shadow rounded-lg p-6 max-w-xl mx-auto">
+    <h2 class="text-xl font-semibold mb-4">Update / Add Policy</h2>
+    <form method="post" action="/admin/policies" class="space-y-4">
+      <input type="hidden" name="_csrf" value="{{ .csrfToken }}" />
+
+      <label class="block">
+        <span class="text-gray-700">Kid Username</span>
+        <input type="text" name="username" required class="mt-1 block w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
+      </label>
+
+      <label class="block">
+        <span class="text-gray-700">Allowed (comma-separated)</span>
+        <input type="text" name="allowed" class="mt-1 block w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
+      </label>
+
+      <label class="block">
+        <span class="text-gray-700">Restricted (comma-separated)</span>
+        <input type="text" name="restricted" class="mt-1 block w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
+      </label>
+
+      <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded transition">Save Policy</button>
+    </form>
+  </div>
+</body>
+</html>
