@@ -113,10 +113,11 @@ permit group add kids bob_kid
 ## Container (Optional)
 A hardened Chainguard Go runtime is recommended. 
 
-Use a multi-stage build with Chainguard’s Go builder and Wolfi base for a minimal, secure image. Example `Dockerfile`:
+Use a multi-stage build with Chainguard’s Go builder and Debian Bullseye slim base for a minimal, secure image. Example `Dockerfile`:
 ```dockerfile
 # ─── 1) Builder Stage ────────────────────────────────────────────
-FROM cgr.dev/chainguard/go@sha256:7c470e24ead842cb1a6e668912709d1b8e29c7687581924ba9164031adbcf41f AS builder
+FROM chainguard/go:latest AS builder
+
 WORKDIR /app
 
 # Download deps
@@ -129,11 +130,12 @@ RUN CGO_ENABLED=0 GOOS=linux \
     go build -ldflags="-s -w" -o /usr/local/bin/ai-app ./cmd
 
 # ─── 2) Runtime Stage ────────────────────────────────────────────
-FROM cgr.dev/chainguard/wolfi-base:latest
+FROM debian:bullseye-slim
 
-# Install TLS certs + curl (for healthchecks)
-RUN tdnf install -y ca-certificates curl \
-    && tdnf clean all
+# install certs + curl + jq
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ca-certificates curl jq \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy the compiled binary
 COPY --from=builder /usr/local/bin/ai-app /usr/local/bin/ai-app
